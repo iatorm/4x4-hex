@@ -130,24 +130,21 @@ def win(board):
     return NEITHER
 
 def winning(s, board, player):
-    "Is s a winning strategy for the given player from the given position on their turn?"
+    "Is s a winning strategy for the given player from the given position on their turn? Return also the losing game."
     winner = win(board)
     if winner == player:
-        return True
+        return (True, None)
     elif winner == enemy(player):
-        for i in range(4):
-            print(enc_board(board)[i*4:i*4+4])
-        print("----")
-        return False
+        return (False, [board])
     else:
-        board = board[:]
-        board[s(board)] = player
-        res = all(winning(s, board[:i] + [enemy(player)] + board[i+1:], player) for i in range(16) if board[i] == NEITHER)
-        if not res:
-            for i in range(4):
-                print(enc_board(board)[i*4:i*4+4])
-            print("----")
-        return res
+        new = board[:]
+        new[s(new)] = player
+        for i in range(16):
+            if new[i] == NEITHER:
+                res, game = winning(s, new[:i] + [enemy(player)] + new[i+1:], player)
+                if not res:
+                    return (False, [board, new] + game)
+        return (True, None)
 
 ### Main function
 
@@ -157,9 +154,14 @@ def main():
     else:
         s = strategy(player_strategy, INPUT_TYPE, OUTPUT_TYPE, PLAYER)
     try:
-        if winning(s, [NEITHER]*16, PLAYER):
+        res, game = winning(s, [NEITHER]*16, PLAYER)
+        if res:
             print("This strategy is winning.")
         else:
+            for board in game:
+                for i in range(4):
+                    print(enc_board(board)[4*i:4*(i+1)])
+                print("----")
             print("This strategy is not winning.")
     except IOError as e:
         print("Something unexpected happened:\n", e)
