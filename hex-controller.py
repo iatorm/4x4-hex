@@ -4,12 +4,13 @@ from subprocess import check_output, Popen, PIPE
 ### Interaction
 
 # Input types
-STDIN    = 0
-CMD_ARGS = 1
-FUNCTION = 2 # uses player_strategy
+STDIN          = 0
+CMD_ARGS       = 1
+SPLIT_CMD_ARGS = 2
+FUNCTION       = 3 # uses player_strategy
 
 # Change this to your liking
-INPUT_TYPE = STDIN
+INPUT_TYPE = SPLIT_CMD_ARGS
 
 # Output types
 ZERO_BASED_INDEX = 0
@@ -63,6 +64,8 @@ def strategy(command, in_type, out_type, player, function=None):
                 out = Popen(command, stdin=PIPE, stdout=PIPE, universal_newlines=True).communicate(message)[0].rstrip()
             elif in_type == CMD_ARGS:
                 out = check_output(command + [message], universal_newlines=True).rstrip()
+            elif in_type == SPLIT_CMD_ARGS:
+                out = check_output(command + list(message), universal_newlines=True).rstrip()
             if OUTPUT_TYPE == ZERO_BASED_INDEX:
                 try:
                     out_num = int(out)

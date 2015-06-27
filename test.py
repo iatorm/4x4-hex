@@ -6,8 +6,9 @@ import sys
 # Input methods
 STDIN = 0
 ARGS  = 1
+SPLIT = 2
 
-INPUT = STDIN
+INPUT = SPLIT
 
 # Output formats
 ZERO_BASED = 0
@@ -24,8 +25,10 @@ PLAYER = WHITE
 
 if INPUT == STDIN:
     board = input()
-else:
+elif INPUT == ARGS:
     board = sys.argv[1]
+else:
+    board = "".join(sys.argv[1:])
 response = board.index("E")
 if OUTPUT == ZERO_BASED:
     print(response)
