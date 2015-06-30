@@ -124,7 +124,7 @@ def win(board):
     if any(i > 11 for i in seen):
         return WHITE
     seen = set()
-    front = set(i*4 for i in range(4) if board[i] == BLACK)
+    front = set(i for i in range(0,16,4) if board[i] == BLACK)
     while front:
         seen.update(front)
         front = set(j for i in front for j in nbors(i) if board[j] == BLACK and j not in seen)
